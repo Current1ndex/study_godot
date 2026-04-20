@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://dvsr6psfy4uhs"]
+
+[ext_resource type="PackedScene" uid="uid://cvhedk5a28osh" path="res://scenes_0/sprite_2d_demo.tscn" id="1_juph1"]
+
+[node name="Node2D" type="Node2D" unique_id=672173288]
+
+[node name="Sprite2D" parent="." unique_id=1299608685 instance=ExtResource("1_juph1")]
+position = Vector2(238, 261)
+
+[node name="Timer" type="Timer" parent="Sprite2D" unique_id=419119413]
+autostart = true
+
+[node name="Button" type="Button" parent="." unique_id=1166410604]
+offset_left = 17.0
+offset_top = 558.0
+offset_right = 297.0
+offset_bottom = 690.0
+text = "Toggle motion"
+
+[connection signal="pressed" from="Button" to="Sprite2D" method="OnButtonPressed"]
