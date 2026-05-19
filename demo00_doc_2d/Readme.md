@@ -26,7 +26,7 @@
 
 ---
 
-## 2D 游戏开发流程
+## 2D 游戏开发流程 scenes_1 + scripts_1
 
 > 官方教程：[2D 游戏开发入门](https://docs.godotengine.org/zh-cn/4.x/getting_started/first_2d_game/index.html)
 
@@ -85,5 +85,3 @@
 | **_Process** | 无。 |
 | **Signal** | 无。 |
 | **交互** | 主场景根据玩家的 `Hit` 信号，触发计时停止、UI `ShowGameOver` 和音乐切换；根据 UI 的 `StartGame` 信号，删除上局数据、生成玩家、开始计时（分数计算 `OnScoreTimerTimeout` 和敌人生成 `OnMobTimerTimeout`）、展示文本、播放音乐。 |
-
-
