@@ -6,7 +6,13 @@ public partial class Player : CharacterBody3D {
     public int Speed {get; set;} = 14;
     [Export]
     public int FallAcceleration {get; set;} = 75;
+    [Export]
+    public int JumpImpulse { get; set; } = 20;
+    [Export]
+    public int BounceImpulse { get; set; } = 16;
     private Vector3 _targetVelocity = Vector3.Zero;
+    [Signal]
+    public delegate void HitEventHandler();
 
     // 相比于 _process() 是专为物理相关的代码而设计
     public override void _PhysicsProcess(double delta) {
@@ -26,7 +32,48 @@ public partial class Player : CharacterBody3D {
         if (direction != Vector3.Zero) {
             direction = direction.Normalized();
             GetNode<Node3D>("Pivot").Basis = Basis.LookingAt(direction);
+            GetNode<AnimationPlayer>("AnimationPlayer").SpeedScale = 4;
+        } 
+        else
+        {
+            GetNode<AnimationPlayer>("AnimationPlayer").SpeedScale = 1;
         }
+        _targetVelocity.X = direction.X * Speed;
+        _targetVelocity.Z = direction.Z * Speed;
+        if (!IsOnFloor()) {
+            _targetVelocity.Y -= FallAcceleration * (float)delta;
+        }
+        Velocity = _targetVelocity;
+        if (IsOnFloor() && Input.IsActionJustPressed("jump"))
+        {
+            _targetVelocity.Y = JumpImpulse;
+        }
+        for (int index = 0; index < GetSlideCollisionCount(); index++)
+        {
+            KinematicCollision3D collision = GetSlideCollision(index);
+            if (collision.GetCollider() is Mob mob)
+            {
+                if (Vector3.Up.Dot(collision.GetNormal()) > 0.1f)
+                {
+                    mob.Squash();
+                    _targetVelocity.Y = BounceImpulse;
+                    break;
+                }
+            }
+        }
+        MoveAndSlide();
+        var pivot = GetNode<Node3D>("Pivot");
+        pivot.Rotation = new Vector3(Mathf.Pi / 6.0f * Velocity.Y / JumpImpulse, pivot.Rotation.Y, pivot.Rotation.Z);
     }
 
+    private void Die()
+    {
+        EmitSignal(SignalName.Hit);
+        QueueFree();
+    }
+
+    private void OnMobDetectorBodyEntered(Node3D body)
+    {
+        Die();
+    }
 }

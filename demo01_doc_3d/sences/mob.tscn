@@ -1,0 +1,64 @@
+[gd_scene format=3 uid="uid://ccqy7wuy8qtrh"]
+
+[ext_resource type="Script" uid="uid://cvd780rsh0fit" path="res://scripts/Mob.cs" id="1_fcj05"]
+[ext_resource type="PackedScene" uid="uid://dkmuju2nr42x4" path="res://art/mob.glb" id="2_jd758"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_waq41"]
+size = Vector3(1.6167603, 0.93310547, 1.6528702)
+
+[sub_resource type="Animation" id="Animation_fcj05"]
+resource_name = "float"
+length = 1.2
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Pivot/Charactor:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0.3, 0.7, 1.2),
+"transitions": PackedFloat32Array(0.4352752, 2.0705302, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, 0.65, 0), Vector3(0, 0.35, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Pivot/Charactor:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0.1, 0.5, 1.2),
+"transitions": PackedFloat32Array(0.4352752, 0.4204483, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0.13962634, 0, 0), Vector3(-0.15707964, 0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_jd758"]
+_data = {
+&"float": SubResource("Animation_fcj05")
+}
+
+[node name="Mob" type="CharacterBody3D" unique_id=1184788329]
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("1_fcj05")
+
+[node name="Pivot" type="Node3D" parent="." unique_id=1453095908]
+
+[node name="Charactor" parent="Pivot" unique_id=49656422 instance=ExtResource("2_jd758")]
+transform = Transform3D(1, 0, 0, 0, 0.98768836, 0.15643448, 0, -0.15643448, 0.98768836, 0, 0.35, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=393534623]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0066730976, 0.46655273, -0.022475068)
+shape = SubResource("BoxShape3D_waq41")
+
+[node name="VisibleOnScreenNotifier3D" type="VisibleOnScreenNotifier3D" parent="." unique_id=568757473]
+aabb = AABB(-1.1418642, -1, -1.3731762, 2.3257205, 2, 3.3244774)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1145834847]
+libraries/ = SubResource("AnimationLibrary_jd758")
+autoplay = &"float"
+
+[connection signal="screen_exited" from="VisibleOnScreenNotifier3D" to="." method="OnVisibleOnScreenNotifier3dScreenExited"]
